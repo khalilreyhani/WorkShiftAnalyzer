@@ -19,7 +19,7 @@ namespace Domain.Models
         [MaxLength(20)]
 
         public DateTime DateTimeCreateDate { get; set; } = DateTime.Now;
-        [MaxLength(10)]
+       
 
         [Display(Name = "IsDeleted")]
         public bool IsDeleted { get; set; } = false;
