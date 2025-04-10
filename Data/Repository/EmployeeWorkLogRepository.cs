@@ -33,9 +33,32 @@ namespace Data.Repository
 
             public async Task AddRangeEmployeeWork(List<EmployeeWorkLog> employeeWorkLogs)
             {
-                await _ctx.EmployeeWorkLogs.AddRangeAsync(employeeWorkLogs);
-                await _ctx.SaveChangesAsync();
+                if (_ctx.EmployeeWorkLogs.Any())
+                {
+                    var existingEntries = await _ctx.EmployeeWorkLogs
+                        .Where(e => employeeWorkLogs
+                            .Select(w => new { w.EmployeeCode, w.Date })
+                            .Any(log => log.EmployeeCode == e.EmployeeCode && log.Date == e.Date))
+                        .ToListAsync();
+
+                    var newEntries = employeeWorkLogs
+                        .Where(log => !existingEntries.Any(e => e.EmployeeCode == log.EmployeeCode && e.Date == log.Date))
+                        .ToList();
+
+                    if (newEntries.Any())
+                    {
+                        await _ctx.EmployeeWorkLogs.AddRangeAsync(newEntries);
+                        await _ctx.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    // اگر دیتابیس خالی است، تمام داده‌ها را اضافه می‌کنیم
+                    await _ctx.EmployeeWorkLogs.AddRangeAsync(employeeWorkLogs);
+                    await _ctx.SaveChangesAsync();
+                }
             }
+
 
             public void Delete(int Id)
             {
