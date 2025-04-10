@@ -1,7 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Context;
+
+using DependencyContainer;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<DbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MySite")
+    ?? throw new InvalidOperationException("Connection string 'MySite' not found.")));
+
 
 var app = builder.Build();
 

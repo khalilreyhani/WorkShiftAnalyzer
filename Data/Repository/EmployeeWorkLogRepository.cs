@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Data.Repository
 {
-    internal class EmployeeWorkLogRepository : IEmployeeWorkLogRepository
+    public class EmployeeWorkLogRepository : IEmployeeWorkLogRepository
     {
         public void Delete(int Id)
         {
