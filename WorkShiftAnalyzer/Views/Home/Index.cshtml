@@ -6,7 +6,7 @@
     <div class="card shadow p-4">
         <h2 class="mb-4 text-center">آپلود و پردازش فایل اکسل</h2>
 
-     @*    @if (TempData["Success"] != null)
+        @if (TempData["Success"] != null)
         {
             <div class="alert alert-success">@TempData["Success"]</div>
         }
@@ -16,18 +16,18 @@
             <div class="alert alert-danger">@TempData["Error"]</div>
         }
 
-        @if (TempData["ErrorList"] != null)
+        @if (TempData["ErrorList"] is string[] errorsArray)
         {
             <div class="alert alert-warning">
                 <strong>خطاهای موجود در فایل:</strong>
                 <ul>
-                    @foreach (var error in (List<string>)TempData["ErrorList"])
+                    @foreach (var error in errorsArray)
                     {
                         <li>@error</li>
                     }
                 </ul>
             </div>
-        } *@
+        }
 
         <form asp-controller="Home" asp-action="UploadFile" method="post" enctype="multipart/form-data">
             <div class="mb-3">
