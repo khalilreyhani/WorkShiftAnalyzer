@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Domain.Models.EmployeeWork
+{
+    public class EmployeeWorkLog:BaseEntities
+    {
+       
+        [Required]
+        public string EmployeeCode { get; set; } // کد کارمند
+
+        [Required]
+        public string EmployeeName { get; set; } // نام کارمند
+
+        [Required]
+        public DateTime Date { get; set; } // تاریخ
+
+        [Required]
+        public TimeSpan WorkHours { get; set; } // مدت زمان کارکرد روزانه
+
+        [Required]
+        public TimeSpan BreakTime { get; set; } // مدت استراحت در حین کار
+
+        public ShiftType ShiftCode { get; set; } // کد شیفت
+    }
+    public enum ShiftType
+    {
+        A = 1,
+        B = 2,
+        C = 3
+    }
+}
