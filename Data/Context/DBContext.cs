@@ -17,7 +17,7 @@ namespace Context
         #region EmployeeWork
 
 
-        public DbSet<EmployeeWorkLog> employeeWorkLogs { get; set; }
+        public DbSet<EmployeeWorkLog> EmployeeWorkLogs { get; set; }
         public DbSet<Shift> Shifts { get; set; }
        
 
