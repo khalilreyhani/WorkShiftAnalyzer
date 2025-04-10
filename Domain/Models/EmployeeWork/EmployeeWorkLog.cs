@@ -21,11 +21,15 @@ namespace Domain.Models.EmployeeWork
         public DateTime Date { get; set; } // تاریخ
 
         [Required]
+        public TimeSpan WorkStart { get; set; } 
+        public TimeSpan WorkEnd { get; set; }
         public TimeSpan WorkHours { get; set; } // مدت زمان کارکرد روزانه
-        public TimeSpan WorkEnd { get; set; } 
+
 
         [Required]
         public TimeSpan BreakTime { get; set; } // مدت استراحت در حین کار
+        public string FileName { get; set; }
+
 
         [Required]
         public int ShiftId { get; set; } // کلید خارجی برای شیفت

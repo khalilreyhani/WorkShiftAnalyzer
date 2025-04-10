@@ -49,6 +49,7 @@ namespace WorkShiftAnalyzer.Controllers
             }
 
             var errors = new List<string>(); // لیست خطاها
+            string fileName = Path.GetFileName(file.FileName);
 
             try
             {
@@ -69,17 +70,19 @@ namespace WorkShiftAnalyzer.Controllers
                          
                             try
                             {
-                               
+                                var Workstart = TimeSpan.TryParse(row.Cell(4).GetValue<string>(), out var workHours) ? workHours : TimeSpan.Zero;
+                                var Workend = TimeSpan.TryParse(row.Cell(5).GetValue<string>(), out var workEnd) ? workEnd : TimeSpan.Zero;
 
                                 var log = new EmployeeWorkLog
                                 {
                                     EmployeeCode = row.Cell(2).GetValue<string>(),
                                     EmployeeName = row.Cell(1).GetValue<string>(),
                                     Date = Convert.ToDateTime(row.Cell(3).GetValue<string>()),
-                                    WorkHours = TimeSpan.TryParse(row.Cell(4).GetValue<string>(), out var workHours) ? workHours : TimeSpan.Zero,
-                                    WorkEnd = TimeSpan.TryParse(row.Cell(5).GetValue<string>(), out var workEnd) ? workEnd : TimeSpan.Zero,
+                                    WorkStart = Workstart,
+                                    WorkEnd = Workend,
+                                    WorkHours = Workend - Workstart,
                                     BreakTime = TimeSpan.TryParse(row.Cell(6).GetValue<string>(), out var breakTime) ? breakTime : TimeSpan.Zero,
-                                    
+                                    FileName=fileName,
                                     ShiftId = _workShiftServices.GetShiftId(row.Cell(7).GetValue<string>().ToUpper())
                                 };
 
