@@ -1,5 +1,8 @@
 ﻿using Application.Interfaces;
 using Context;
+using Domain.Interfaces;
+using Domain.Models.EmployeeWork;
+using Domain.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +13,44 @@ namespace Application.Services
 {
     public class WorkShiftServices: IWorkShiftServices
     {
-        private readonly DBContext _ctx;
-        public WorkShiftServices( DBContext ctx)
+        private IEmployeeWorkLogRepository _employeeWorkLogRepository;
+        private IShiftRepository _shiftRepository;
+        public WorkShiftServices(IShiftRepository shiftRepository,IEmployeeWorkLogRepository employeeWorkLogRepository)
         {
-            _ctx = ctx;
+            _employeeWorkLogRepository = employeeWorkLogRepository; 
+            _shiftRepository = shiftRepository;
+            
+        }
+
+        public async Task<ServicesStatus> AddRangeAsync(List<EmployeeWorkLog> employeeWorkLogs)
+        {
+            try
+            {
+                await _employeeWorkLogRepository.AddRangeEmployeeWork(employeeWorkLogs);
+                return ServicesStatus.sucsuccess;
+            }
+            catch (Exception ex)
+            {
+                return ServicesStatus.failed;
+
+            }
+
+
+
+        }
+
+        public int GetShiftId(string name)
+        {
+          var item= _shiftRepository.GetAll(x=>x.ShiftName==name).FirstOrDefault();
+            if(item!=null)
+                return item.Id;
+
+            return 0;
+        }
+
+        public List<Shift> GetShifts()
+        {
+            throw new NotImplementedException();
         }
     }
 }

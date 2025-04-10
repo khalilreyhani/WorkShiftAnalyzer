@@ -7,6 +7,7 @@ using Domain.Models.EmployeeWork;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Interfaces;
 using Application.Services;
+using Data.Repository.Data.Repository;
 
 
 namespace DependencyContainer

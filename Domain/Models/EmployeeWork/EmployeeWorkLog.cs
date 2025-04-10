@@ -22,6 +22,7 @@ namespace Domain.Models.EmployeeWork
 
         [Required]
         public TimeSpan WorkHours { get; set; } // مدت زمان کارکرد روزانه
+        public TimeSpan WorkEnd { get; set; } 
 
         [Required]
         public TimeSpan BreakTime { get; set; } // مدت استراحت در حین کار

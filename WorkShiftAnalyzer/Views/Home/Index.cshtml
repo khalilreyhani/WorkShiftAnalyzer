@@ -1,8 +1,62 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "آپلود فایل اکسل";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="mb-4 text-center">آپلود و پردازش فایل اکسل</h2>
+
+     @*    @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        @if (TempData["ErrorList"] != null)
+        {
+            <div class="alert alert-warning">
+                <strong>خطاهای موجود در فایل:</strong>
+                <ul>
+                    @foreach (var error in (List<string>)TempData["ErrorList"])
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            </div>
+        } *@
+
+        <form asp-controller="Home" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="file" class="form-label">انتخاب فایل اکسل:</label>
+                <input type="file" name="file" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">بارگذاری</button>
+        </form>
+    </div>
 </div>
+
+
+<!-- استایل‌های سفارشی -->
+<style>
+    .container {
+        max-width: 500px;
+    }
+
+    .card {
+        border-radius: 15px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+</style>

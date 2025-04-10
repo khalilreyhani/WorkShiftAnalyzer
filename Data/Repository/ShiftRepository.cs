@@ -1,49 +1,70 @@
-﻿using Domain.Interfaces;
+﻿using Context;
+using Domain.Interfaces;
 using Domain.Models.EmployeeWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.Repository
 {
     public class ShiftRepository : IShiftRepository
     {
+        private readonly DBContext _ctx;
+
+        public ShiftRepository(DBContext ctx)
+        {
+            _ctx = ctx;
+        }
+
         public void Delete(int Id)
         {
-            throw new NotImplementedException();
+            var item = Get(Id);
+            if (item != null)
+            {
+                item.IsDeleted = true;
+                Update(item);
+                SaveChanges();
+            }
         }
 
         public Shift Get(int Id)
         {
-            throw new NotImplementedException();
+            return _ctx.Shifts.FirstOrDefault(x => x.Id == Id);
         }
 
         public IEnumerable<Shift> GetAll(Expression<Func<Shift, bool>> where = null)
         {
-            throw new NotImplementedException();
+            IQueryable<Shift> query = _ctx.Shifts;
+
+            if (where != null)
+                query = query.Where(where);
+
+            return query.ToList();
         }
 
         public void Insert(Shift entity)
         {
-            throw new NotImplementedException();
+            _ctx.Shifts.Add(entity);
+            SaveChanges();
         }
 
         public bool IsExist(int Id)
         {
-            throw new NotImplementedException();
+            return _ctx.Shifts.Any(x => x.Id == Id);
         }
 
         public void SaveChanges()
         {
-            throw new NotImplementedException();
+            _ctx.SaveChanges();
         }
 
         public void Update(Shift entity)
         {
-            throw new NotImplementedException();
+            _ctx.Shifts.Update(entity);
+            SaveChanges();
         }
     }
 }

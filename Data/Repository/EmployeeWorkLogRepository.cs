@@ -1,5 +1,7 @@
-﻿using Domain.Interfaces;
+﻿using Context;
+using Domain.Interfaces;
 using Domain.Models.EmployeeWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,41 +11,80 @@ using System.Threading.Tasks;
 
 namespace Data.Repository
 {
-    public class EmployeeWorkLogRepository : IEmployeeWorkLogRepository
+    using Context;
+    using Domain.Interfaces;
+    using Domain.Models.EmployeeWork;
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+
+    namespace Data.Repository
     {
-        public void Delete(int Id)
+        public class EmployeeWorkLogRepository : IEmployeeWorkLogRepository
         {
-            throw new NotImplementedException();
-        }
+            private readonly DBContext _ctx;
+            public EmployeeWorkLogRepository(DBContext ctx)
+            {
+                _ctx = ctx;
+            }
 
-        public EmployeeWorkLog Get(int Id)
-        {
-            throw new NotImplementedException();
-        }
+            public async Task AddRangeEmployeeWork(List<EmployeeWorkLog> employeeWorkLogs)
+            {
+                await _ctx.EmployeeWorkLogs.AddRangeAsync(employeeWorkLogs);
+                await _ctx.SaveChangesAsync();
+            }
 
-        public IEnumerable<EmployeeWorkLog> GetAll(Expression<Func<EmployeeWorkLog, bool>> where = null)
-        {
-            throw new NotImplementedException();
-        }
+            public void Delete(int Id)
+            {
+                var item = Get(Id);
+                if (item != null)
+                {
+                    item.IsDeleted = true;
+                    Update(item);
+                    SaveChanges(); // ذخیره تغییرات
+                }
+            }
 
-        public void Insert(EmployeeWorkLog entity)
-        {
-            throw new NotImplementedException();
-        }
+            public EmployeeWorkLog Get(int Id)
+            {
+                return _ctx.EmployeeWorkLogs.FirstOrDefault(x => x.Id == Id);
+            }
 
-        public bool IsExist(int Id)
-        {
-            throw new NotImplementedException();
-        }
+            public IEnumerable<EmployeeWorkLog> GetAll(Expression<Func<EmployeeWorkLog, bool>> where = null)
+            {
+                IQueryable<EmployeeWorkLog> query = _ctx.EmployeeWorkLogs;
 
-        public void SaveChanges()
-        {
-            throw new NotImplementedException();
-        }
+                if (where != null)
+                    query = query.Where(where);
 
-        public void Update(EmployeeWorkLog entity)
-        {
-            throw new NotImplementedException();
+                return query.ToList();
+            }
+
+            public void Insert(EmployeeWorkLog entity)
+            {
+                _ctx.Add(entity);
+                SaveChanges();
+            }
+
+            public bool IsExist(int Id)
+            {
+                return _ctx.EmployeeWorkLogs.Any(x => x.Id == Id);
+            }
+
+            public void SaveChanges()
+            {
+                _ctx.SaveChanges();
+            }
+
+            public void Update(EmployeeWorkLog entity)
+            {
+                _ctx.Update(entity);
+                SaveChanges();
+            }
         }
     }
+
 }

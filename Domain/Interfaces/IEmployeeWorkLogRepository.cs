@@ -1,4 +1,5 @@
 ﻿using Domain.Models.EmployeeWork;
+using Domain.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,8 @@ namespace Domain.Interfaces
     public interface IEmployeeWorkLogRepository:IGneralRepository<EmployeeWorkLog>
 {
 
-
-}
+        public Task AddRangeEmployeeWork(List<EmployeeWorkLog> employeeWorkLogs);
+    }
 
 
 }
