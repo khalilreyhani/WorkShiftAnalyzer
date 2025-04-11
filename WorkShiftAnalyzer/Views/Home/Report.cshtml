@@ -1,0 +1,87 @@
+﻿@model Domain.ViewModel.EmployeeWorkLogViewModel
+
+@{
+    ViewData["Title"] = "Employee Work Report";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Employee Work Report</h2>
+
+    <!-- انتخاب نام کارمند و تاریخ -->
+    <div class="row mb-4">
+        <div class="col-md-5">
+            <label for="employeeSelect">Select Employee:</label>
+            <select id="employeeSelect" class="form-control">
+                <option value="">-- Select Employee --</option>
+                @foreach (var employee in Model.Employees)
+                {
+                    <option value="@employee.EmployeeCode">@employee.EmployeeName (@employee.EmployeeCode)</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-5">
+            <label for="dateSelect">Select Date:</label>
+            <select id="employeeSelect" class="form-control">
+                <option value="">-- Select Employee --</option>
+                @foreach (var day in Model.DateTimes)
+                {
+                    <option value="@day">@day</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-primary w-100" onclick="loadEmployeeData()">Show Report</button>
+        </div>
+    </div>
+
+    <div id="workReport" style="display:none;">
+        <h4 class="text-center">Work Shift and Performance</h4>
+        <canvas id="workChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function loadEmployeeData() {
+        var employeeCode = document.getElementById("employeeSelect").value;
+        var selectedDate = document.getElementById("dateSelect").value;
+
+        if (!employeeCode || !selectedDate) {
+            alert("Please select an employee and a date.");
+            return;
+        }
+
+        // اینجا درخواست AJAX برای دریافت اطلاعات را ارسال کنید
+        fetch(`/EmployeeWork/GetWorkData?employeeCode=${employeeCode}&date=${selectedDate}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    document.getElementById("workReport").style.display = "block";
+                    renderChart(data);
+                } else {
+                    alert("No data found for the selected employee and date.");
+                }
+            });
+    }
+
+    function renderChart(data) {
+        var ctx = document.getElementById('workChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Work Start", "Work End", "Break Time", "Effective Work"],
+                datasets: [{
+                    label: "Hours",
+                    data: [data.WorkStart, data.WorkEnd, data.BreakTime, data.UsefulWork],
+                    backgroundColor: ['#4CAF50', '#FF5733', '#FFD700', '#3498DB']
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+</script>

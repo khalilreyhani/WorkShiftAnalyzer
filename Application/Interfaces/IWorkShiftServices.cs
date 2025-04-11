@@ -12,11 +12,14 @@ namespace Application.Interfaces
     {
         public Task<ServicesStatus> AddRangeAsync(List<EmployeeWorkLog> employeeWorkLogs);
         public List<Shift> GetShifts();
+        public Task<List<EmployeeWorkLog>> GetEmployeeWorkLogs();
 
         public int GetShiftId(string name);
 
         public Task<List<ExcessBreakCounts>> ExcessBreakCalc();
         public Task<List<WorkDeficitCounts>> WorkDeficitCalc();
 
+        public Task<EmployeeWorkLogViewModel> GetAllUserAndDates();
+        
     }
 }

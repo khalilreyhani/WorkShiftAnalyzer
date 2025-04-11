@@ -24,19 +24,20 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // داده‌های ارسالی از مدل
-    const WorkDeficitemployeeNames = @Html.Raw(Json.Serialize(Model.WorkDeficitCounts.Select(x => x.EmployeeNames)));
-    const workDeficitCounts = @Html.Raw(Json.Serialize(Model.WorkDeficitCounts.Select(x => x.Counts)));
-    
-    const excessBreakNames = @Html.Raw(Json.Serialize(Model.ExcessBreakCounts.Select(x => x.EmployeeNames)));
-    const excessBreakCounts = @Html.Raw(Json.Serialize(Model.ExcessBreakCounts.Select(x => x.Counts)));
+     document.addEventListener("DOMContentLoaded", function () {
+
+        const WorkDeficitLabels = @Html.Raw(Json.Serialize(Model.WorkDeficitCounts.Select(x => x.EmployeeName + " - " + x.EmployeeCode)));
+
+        const workDeficitCounts = @Html.Raw(Json.Serialize(Model.WorkDeficitCounts.Select(x => x.Counts)));
+
+        const excessBreakLabels = @Html.Raw(Json.Serialize(Model.ExcessBreakCounts.Select(x => x.EmployeeName + " - " + x.EmployeeCode)));
+        const excessBreakCounts = @Html.Raw(Json.Serialize(Model.ExcessBreakCounts.Select(x => x.Counts)));
 
         const ctx1 = document.getElementById('workDeficitChart').getContext('2d');
         new Chart(ctx1, {
             type: 'bar',
             data: {
-                labels: WorkDeficitemployeeNames,
+                labels: WorkDeficitLabels,
                 datasets: [{
                     label: 'تعداد روزهای کسری ساعت',
                     data: workDeficitCounts,
@@ -53,11 +54,12 @@
             }
         });
 
+        // نمودار استراحت بیش از حد مجاز
         const ctx2 = document.getElementById('excessBreakChart').getContext('2d');
         new Chart(ctx2, {
             type: 'bar',
             data: {
-                labels: excessBreakNames,
+                labels: excessBreakLabels,
                 datasets: [{
                     label: 'تعداد روزهای استراحت بیش از حد مجاز',
                     data: excessBreakCounts,
@@ -74,4 +76,5 @@
             }
         });
     });
+
 </script>

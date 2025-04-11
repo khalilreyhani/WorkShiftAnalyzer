@@ -1,18 +1,8 @@
-﻿using Context;
-using Domain.Interfaces;
-using Domain.Models.EmployeeWork;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace Data.Repository
-{
     using Context;
-    using Domain.Interfaces;
+using Dapper;
+using Domain.Interfaces;
     using Domain.Models.EmployeeWork;
     using Domain.ViewModel;
     using Microsoft.EntityFrameworkCore;
@@ -98,17 +88,68 @@ namespace Data.Repository
                     .Include(e => e.Shift)
                     .Where(x => x.ShiftId != null && x.Shift != null && x.BreakTime > x.Shift.BreakDuration)
                     .GroupBy(x => x.EmployeeCode)
-                    .Select(g => new ExcessBreakCounts  // مستقیماً مقداردهی به کلاس مدل
+                    .Select(g => new ExcessBreakCounts  
                     {
-                        EmployeeCode = g.Key,                   // مقدار کد کارمند
-                        EmployeeNames = g.FirstOrDefault().EmployeeName, // نام کارمند
-                        Counts = g.Count()                      // شمارش تعداد دفعاتی که در لیست آمده
+                        EmployeeCode = g.Key,                   
+                        EmployeeName = g.FirstOrDefault().EmployeeName,
+                        Counts = g.Count()                   
                     })
                     .ToListAsync();
             }
 
+        public async Task<List<UserViewModel>> GetAllUser()
+        {
+            if (_ctx == null)
+            {
+                throw new Exception("DbContext is null!");
+            }
 
-            public void Insert(EmployeeWorkLog entity)
+            return await _ctx.EmployeeWorkLogs
+                .Include(e => e.Shift)
+               
+                .GroupBy(x => x.EmployeeCode)
+                .Select(g => new UserViewModel
+                {
+                    EmployeeCode = g.Key,
+                    EmployeeName = g.FirstOrDefault().EmployeeName,
+                    Id = g.FirstOrDefault().Id
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<WorkDeficitCounts>> GetAllWorkDeficit()
+        {
+            using var connection = _ctx.Database.GetDbConnection(); 
+            string query = @"
+        SELECT 
+            e.EmployeeCode, 
+            e.EmployeeName, 
+            COUNT(*) AS Counts
+        FROM EmployeeWorkLogs e
+        INNER JOIN Shifts s ON e.ShiftId = s.Id
+WHERE DATEDIFF(SECOND, s.StartTime, s.EndTime) > DATEDIFF(SECOND, '00:00:00', e.WorkHours)
+        GROUP BY e.EmployeeCode, e.EmployeeName";
+
+            var result = await connection.QueryAsync<WorkDeficitCounts>(query);
+            return result.ToList();
+        }
+
+        public async Task<List<DateTime>> GetDays()
+        {
+            if (_ctx == null)
+            {
+                throw new Exception("DbContext is null!");
+            }
+
+            return await _ctx.EmployeeWorkLogs
+                .Select(x => x.Date) 
+                .Distinct() 
+                .OrderBy(date => date)  
+                .ToListAsync();
+        }
+
+
+        public void Insert(EmployeeWorkLog entity)
             {
                 _ctx.Add(entity);
                 SaveChanges();
@@ -132,4 +173,4 @@ namespace Data.Repository
         }
     }
 
-}
+

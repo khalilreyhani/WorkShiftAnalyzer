@@ -51,6 +51,27 @@ namespace Application.Services
 
         }
 
+        public async Task<EmployeeWorkLogViewModel> GetAllUserAndDates()
+        {
+            if (_employeeWorkLogRepository == null)
+            {
+                throw new Exception("Repository is null!");
+            }
+
+            return new EmployeeWorkLogViewModel
+            {
+                Employees = await _employeeWorkLogRepository.GetAllUser() ?? new List<UserViewModel>(),
+                DateTimes = await _employeeWorkLogRepository.GetDays() ?? new List<DateTime>()
+            };
+        }
+
+        public async Task<List<EmployeeWorkLog>> GetEmployeeWorkLogs()
+        {
+            
+            
+             return (List<EmployeeWorkLog>)await _employeeWorkLogRepository.GetAll();
+        }
+
         public int GetShiftId(string name)
         {
           var item= _shiftRepository.GetAll(x=>x.ShiftName==name);
@@ -65,9 +86,9 @@ namespace Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<WorkDeficitCounts>> WorkDeficitCalc()
+        public async Task<List<WorkDeficitCounts>> WorkDeficitCalc()
         {
-            throw new NotImplementedException();
+            return await _employeeWorkLogRepository.GetAllWorkDeficit();
         }
     }
 }

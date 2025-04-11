@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Models.EmployeeWork;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace Domain.ViewModel
     {
         public string EmployeeCode { get; set; }
 
-        public string EmployeeNames { get; set; }
+        public string EmployeeName { get; set; }
         public int Counts { get; set; } 
 
        
@@ -25,9 +26,15 @@ namespace Domain.ViewModel
     public class ExcessBreakCounts
     {
         public string EmployeeCode { get; set; }
-        public string EmployeeNames { get; set; }
+        public string EmployeeName { get; set; }
         public int Counts { get; set; } 
 
        
+    }
+
+    public class EmployeeWorkLogViewModel
+    {
+        public List<UserViewModel> Employees { get; set; }
+        public List <DateTime> DateTimes { get; set; }
     }
 }

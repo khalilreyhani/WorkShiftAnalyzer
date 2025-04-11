@@ -26,13 +26,21 @@ namespace WorkShiftAnalyzer.Controllers
             return View();
         }
 
-        public async Task< IActionResult> Privacy()
+        public async Task< IActionResult> ReportAll()
         {
             WorkDeficitViewModel model = new WorkDeficitViewModel();
 
-        model.ExcessBreakCounts=  await  _workShiftServices.ExcessBreakCalc();
-            model.WorkDeficitCounts = new List<WorkDeficitCounts>();
-           
+            model.ExcessBreakCounts=  await  _workShiftServices.ExcessBreakCalc();
+            model.WorkDeficitCounts =await _workShiftServices.WorkDeficitCalc();
+
+
+            return View(model);
+        }
+
+        public async Task< IActionResult> Report()
+        {
+            EmployeeWorkLogViewModel model = new EmployeeWorkLogViewModel();
+            model=await _workShiftServices.GetAllUserAndDates();
             return View(model);
         }
 
