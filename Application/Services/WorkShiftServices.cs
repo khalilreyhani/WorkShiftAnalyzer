@@ -39,9 +39,21 @@ namespace Application.Services
 
         }
 
+        public async Task<List<ExcessBreakCounts>> ExcessBreakCalc()
+        {
+           
+            return await _employeeWorkLogRepository.GetAllExcessBreak();
+   
+               
+
+
+           
+
+        }
+
         public int GetShiftId(string name)
         {
-          var item= _shiftRepository.GetAll(x=>x.ShiftName==name).FirstOrDefault();
+          var item= _shiftRepository.GetAll(x=>x.ShiftName==name);
             if(item!=null)
                 return item.Id;
 
@@ -49,6 +61,11 @@ namespace Application.Services
         }
 
         public List<Shift> GetShifts()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<WorkDeficitCounts>> WorkDeficitCalc()
         {
             throw new NotImplementedException();
         }

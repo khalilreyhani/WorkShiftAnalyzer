@@ -14,6 +14,7 @@ namespace Data.Repository
     using Context;
     using Domain.Interfaces;
     using Domain.Models.EmployeeWork;
+    using Domain.ViewModel;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -76,7 +77,7 @@ namespace Data.Repository
                 return _ctx.EmployeeWorkLogs.FirstOrDefault(x => x.Id == Id);
             }
 
-            public IEnumerable<EmployeeWorkLog> GetAll(Expression<Func<EmployeeWorkLog, bool>> where = null)
+            public async Task<IEnumerable<EmployeeWorkLog>> GetAll(Expression<Func<EmployeeWorkLog, bool>> where = null)
             {
                 IQueryable<EmployeeWorkLog> query = _ctx.EmployeeWorkLogs;
 
@@ -85,6 +86,27 @@ namespace Data.Repository
 
                 return query.ToList();
             }
+
+            public async Task<List<ExcessBreakCounts>> GetAllExcessBreak()
+            {
+                if (_ctx == null)
+                {
+                    throw new Exception("DbContext is null!");
+                }
+
+                return await _ctx.EmployeeWorkLogs
+                    .Include(e => e.Shift)
+                    .Where(x => x.ShiftId != null && x.Shift != null && x.BreakTime > x.Shift.BreakDuration)
+                    .GroupBy(x => x.EmployeeCode)
+                    .Select(g => new ExcessBreakCounts  // مستقیماً مقداردهی به کلاس مدل
+                    {
+                        EmployeeCode = g.Key,                   // مقدار کد کارمند
+                        EmployeeNames = g.FirstOrDefault().EmployeeName, // نام کارمند
+                        Counts = g.Count()                      // شمارش تعداد دفعاتی که در لیست آمده
+                    })
+                    .ToListAsync();
+            }
+
 
             public void Insert(EmployeeWorkLog entity)
             {

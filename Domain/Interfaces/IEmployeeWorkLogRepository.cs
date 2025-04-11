@@ -12,6 +12,8 @@ namespace Domain.Interfaces
 {
 
         public Task AddRangeEmployeeWork(List<EmployeeWorkLog> employeeWorkLogs);
+
+        public Task<List<ExcessBreakCounts>> GetAllExcessBreak();
     }
 
 

@@ -15,7 +15,8 @@ namespace Application.Interfaces
 
         public int GetShiftId(string name);
 
-
+        public Task<List<ExcessBreakCounts>> ExcessBreakCalc();
+        public Task<List<WorkDeficitCounts>> WorkDeficitCalc();
 
     }
 }

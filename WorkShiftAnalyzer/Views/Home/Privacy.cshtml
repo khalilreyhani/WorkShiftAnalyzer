@@ -1,6 +1,77 @@
-﻿@{
+﻿@model Domain.ViewModel.WorkDeficitViewModel
+@{
     ViewData["Title"] = "گزارش عملکرد";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">گزارش عملکرد کارکنان</h2>
+
+    <div class="row">
+        <!-- نمودار کسری ساعت -->
+        <div class="col-md-6">
+            <h4 class="text-center">تعداد افراد دارای کسری ساعت</h4>
+            <canvas id="workDeficitChart"></canvas>
+        </div>
+
+        <!-- نمودار استراحت بیش از حد مجاز -->
+        <div class="col-md-6">
+            <h4 class="text-center">تعداد افراد با استراحت بیش از حد مجاز</h4>
+            <canvas id="excessBreakChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // داده‌های ارسالی از مدل
+    const WorkDeficitemployeeNames = @Html.Raw(Json.Serialize(Model.WorkDeficitCounts.Select(x => x.EmployeeNames)));
+    const workDeficitCounts = @Html.Raw(Json.Serialize(Model.WorkDeficitCounts.Select(x => x.Counts)));
+    
+    const excessBreakNames = @Html.Raw(Json.Serialize(Model.ExcessBreakCounts.Select(x => x.EmployeeNames)));
+    const excessBreakCounts = @Html.Raw(Json.Serialize(Model.ExcessBreakCounts.Select(x => x.Counts)));
+
+        const ctx1 = document.getElementById('workDeficitChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: WorkDeficitemployeeNames,
+                datasets: [{
+                    label: 'تعداد روزهای کسری ساعت',
+                    data: workDeficitCounts,
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        const ctx2 = document.getElementById('excessBreakChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: excessBreakNames,
+                datasets: [{
+                    label: 'تعداد روزهای استراحت بیش از حد مجاز',
+                    data: excessBreakCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    });
+</script>

@@ -65,7 +65,7 @@ namespace Infra.Data.Repository
                 throw new Exception(ex.Message);
             }
         }
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> where = null)
+        public async Task< IEnumerable<T>> GetAll(Expression<Func<T, bool>> where = null)
         {
             return entities.Where(where).AsEnumerable();
         }

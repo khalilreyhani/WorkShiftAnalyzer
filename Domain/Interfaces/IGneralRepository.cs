@@ -11,7 +11,7 @@ namespace Domain.Interfaces
     public interface IGneralRepository<T> where T : BaseEntities
     {
        
-            IEnumerable<T> GetAll(Expression<Func<T,bool>> where = null);
+          Task  <IEnumerable<T>> GetAll(Expression<Func<T,bool>> where = null);
             T Get(int Id);
             void Insert(T entity);
             void Update(T entity);

@@ -24,6 +24,7 @@ namespace Domain.Models.EmployeeWork
         public TimeSpan WorkStart { get; set; } 
         public TimeSpan WorkEnd { get; set; }
         public TimeSpan WorkHours { get; set; } // مدت زمان کارکرد روزانه
+        public TimeSpan Usefulwork { get; set; } // مدت زمان مفید کارکرد روزانه
 
 
         [Required]

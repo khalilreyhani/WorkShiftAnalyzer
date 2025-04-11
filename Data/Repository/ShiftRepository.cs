@@ -35,7 +35,7 @@ namespace Data.Repository
             return _ctx.Shifts.FirstOrDefault(x => x.Id == Id);
         }
 
-        public IEnumerable<Shift> GetAll(Expression<Func<Shift, bool>> where = null)
+        public async Task <IEnumerable<Shift>> GetAll(Expression<Func<Shift, bool>> where = null)
         {
             IQueryable<Shift> query = _ctx.Shifts;
 

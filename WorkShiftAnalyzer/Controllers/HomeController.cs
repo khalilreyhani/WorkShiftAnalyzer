@@ -3,6 +3,7 @@ using Application.Interfaces;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Domain.Models.EmployeeWork;
+using Domain.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using WorkShiftAnalyzer.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -25,10 +26,18 @@ namespace WorkShiftAnalyzer.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task< IActionResult> Privacy()
         {
-            return View();
+            WorkDeficitViewModel model = new WorkDeficitViewModel();
+
+        model.ExcessBreakCounts=  await  _workShiftServices.ExcessBreakCalc();
+            model.WorkDeficitCounts = new List<WorkDeficitCounts>();
+           
+            return View(model);
         }
+
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -70,8 +79,10 @@ namespace WorkShiftAnalyzer.Controllers
                          
                             try
                             {
-                                var Workstart = TimeSpan.TryParse(row.Cell(4).GetValue<string>(), out var workHours) ? workHours : TimeSpan.Zero;
-                                var Workend = TimeSpan.TryParse(row.Cell(5).GetValue<string>(), out var workEnd) ? workEnd : TimeSpan.Zero;
+                                TimeSpan  Workstart = TimeSpan.TryParse(row.Cell(4).GetValue<string>(), out var workHours) ? workHours : TimeSpan.Zero;
+                                TimeSpan  Workend = TimeSpan.TryParse(row.Cell(5).GetValue<string>(), out var workEnd) ? workEnd : TimeSpan.Zero;
+                                TimeSpan  Breaktime = TimeSpan.TryParse(row.Cell(6).GetValue<string>(), out var breakTime) ? breakTime : TimeSpan.Zero;
+                                TimeSpan Workhours = Workend - Workstart;
 
                                 var log = new EmployeeWorkLog
                                 {
@@ -80,8 +91,9 @@ namespace WorkShiftAnalyzer.Controllers
                                     Date = Convert.ToDateTime(row.Cell(3).GetValue<string>()),
                                     WorkStart = Workstart,
                                     WorkEnd = Workend,
-                                    WorkHours = Workend - Workstart,
-                                    BreakTime = TimeSpan.TryParse(row.Cell(6).GetValue<string>(), out var breakTime) ? breakTime : TimeSpan.Zero,
+                                    WorkHours =Workhours,
+                                    BreakTime = Breaktime,
+                                    Usefulwork=(Workhours - Breaktime),
                                     FileName=fileName,
                                     ShiftId = _workShiftServices.GetShiftId(row.Cell(7).GetValue<string>().ToUpper())
                                 };
@@ -122,6 +134,10 @@ namespace WorkShiftAnalyzer.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+
+
     }
 
 
