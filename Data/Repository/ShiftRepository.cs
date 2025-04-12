@@ -45,6 +45,19 @@ namespace Data.Repository
             return query.ToList();
         }
 
+        public int GetShiftId(string shift)
+        {
+            try
+            {
+                return _ctx.Shifts.FirstOrDefault(x => x.ShiftName == shift).Id;
+            }
+            catch
+            {
+                return 0;
+            }
+           
+        }
+
         public void Insert(Shift entity)
         {
             _ctx.Shifts.Add(entity);

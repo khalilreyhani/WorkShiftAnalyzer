@@ -17,6 +17,8 @@ namespace Domain.Interfaces
         public Task<List<WorkDeficitCounts>> GetAllWorkDeficit();
         public Task<List<UserViewModel>> GetAllUser();
         public Task<List<DateTime>> GetDays();
+        public Task<EmployeeWorkLog> GetWorkLog(string Ecode, DateTime Data);
+
     }
 
 

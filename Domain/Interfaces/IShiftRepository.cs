@@ -9,6 +9,6 @@ namespace Domain.Interfaces
 {
     public interface IShiftRepository:IGneralRepository<Shift>
 {
-
+        public int GetShiftId(string shift);
 }
 }

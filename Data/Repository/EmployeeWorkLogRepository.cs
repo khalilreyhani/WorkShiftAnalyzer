@@ -44,7 +44,6 @@ using Domain.Interfaces;
                 }
                 else
                 {
-                    // اگر دیتابیس خالی است، تمام داده‌ها را اضافه می‌کنیم
                     await _ctx.EmployeeWorkLogs.AddRangeAsync(employeeWorkLogs);
                     await _ctx.SaveChangesAsync();
                 }
@@ -148,6 +147,28 @@ WHERE DATEDIFF(SECOND, s.StartTime, s.EndTime) > DATEDIFF(SECOND, '00:00:00', e.
                 .ToListAsync();
         }
 
+        public async Task<EmployeeWorkLog> GetWorkLog(string Ecode, DateTime Data)
+        {
+            if (_ctx == null)
+            {
+                throw new Exception("DbContext is null!");
+            }
+            try
+            {
+                return await _ctx.EmployeeWorkLogs
+                               .Include(e => e.Shift)
+                               .Where(x => x.EmployeeCode == Ecode && x.Date.Equals(Data))
+                              .FirstOrDefaultAsync();
+            }
+            catch (Exception ex) {
+                throw new Exception(" is null!");
+
+
+            }
+
+
+
+        }
 
         public void Insert(EmployeeWorkLog entity)
             {

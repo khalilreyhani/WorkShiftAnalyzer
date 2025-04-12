@@ -20,6 +20,8 @@ namespace Application.Interfaces
         public Task<List<WorkDeficitCounts>> WorkDeficitCalc();
 
         public Task<EmployeeWorkLogViewModel> GetAllUserAndDates();
+
+        public Task<EmployeeWorkLog> GetEmployeeWorkLog(string Ecode,DateTime Data);
         
     }
 }

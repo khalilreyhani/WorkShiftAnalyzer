@@ -54,6 +54,30 @@ namespace WorkShiftAnalyzer.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> EmployeeWorkLogReport(string employeeCode, DateTime workDate)
+        {
+            var model = await _workShiftServices.GetEmployeeWorkLog(employeeCode, workDate);
+
+            if (model == null)
+            {
+                return Json(null); // یا NotFound()
+            }
+
+            return Json(new
+            {
+                WorkStart = model.WorkStart.TotalHours,
+                WorkStartShift = model.Shift.StartTime.TotalHours,
+                
+                WorkEnd = model.WorkEnd.TotalHours,
+                WorkEndShift = model.Shift.EndTime.TotalHours,
+
+                BreakTime = model.BreakTime.TotalHours,
+                BreakTimeShift = model.Shift.BreakDuration.TotalHours,
+
+                UsefulWork = model.Usefulwork.TotalHours
+            });
+        }
 
 
         [HttpPost]

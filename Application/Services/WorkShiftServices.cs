@@ -65,6 +65,13 @@ namespace Application.Services
             };
         }
 
+        public async Task<EmployeeWorkLog> GetEmployeeWorkLog(string Ecode, DateTime Data)
+        {
+            
+           return await _employeeWorkLogRepository.GetWorkLog(Ecode,Data);
+
+        }
+
         public async Task<List<EmployeeWorkLog>> GetEmployeeWorkLogs()
         {
             
@@ -74,11 +81,7 @@ namespace Application.Services
 
         public int GetShiftId(string name)
         {
-          var item= _shiftRepository.GetAll(x=>x.ShiftName==name);
-            if(item!=null)
-                return item.Id;
-
-            return 0;
+           return _shiftRepository.GetShiftId(name);
         }
 
         public List<Shift> GetShifts()
